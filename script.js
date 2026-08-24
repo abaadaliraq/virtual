@@ -53,21 +53,15 @@ const revealObserver = new IntersectionObserver(
 
 revealItems.forEach((item) => revealObserver.observe(item));
 
-document.querySelectorAll(".short-video").forEach((video) => {
+document.querySelectorAll(".short-video, .video-embed").forEach((video) => {
   const trigger = video.querySelector(".video-poster");
+  const fallback = video.querySelector(".video-fallback");
   const videoId = video.dataset.videoId;
 
   trigger?.addEventListener("click", () => {
-    if (!videoId) return;
+    const href = fallback?.href || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : null);
+    if (!href) return;
 
-    video.classList.add("is-playing");
-    video.innerHTML = `
-      <iframe
-        src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0"
-        title="نموذج لتجربة التراث من خلال المحتوى الرقمي الغامر"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-      ></iframe>
-    `;
+    window.open(href, "_blank", "noopener,noreferrer");
   });
 });
